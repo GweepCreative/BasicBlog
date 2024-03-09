@@ -1,4 +1,5 @@
 import BlogButton, { BlogProps } from "@/components/BlogButton";
+import axios from "axios";
 
 const exampleBlog: BlogProps = {
   id: "1",
@@ -14,21 +15,15 @@ const exampleBlog: BlogProps = {
 
 export default function Home() {
   async function newBlog() {
-    const res = await fetch("/api/blog", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: "Awesome Blog",
-        content: "This is a blog about awesome stuff",
-        publishedAt: new Date(),
-      }),
+    const res = await axios.post("/api/blog", {
+      title: "Awesome Blog",
+      content: "This is a blog about awesome stuff",
+      publishedAt: new Date(),
+      author: { name: "John Doe", avatar: "" },
     });
-    const data = await res.json();
-    console.log(data);
+    console.log(res.data);
   }
-  
+
   return (
     <div className=" h-screen flex justify-center items-center">
       <div className="w-full flex justify-evenly items-center">
