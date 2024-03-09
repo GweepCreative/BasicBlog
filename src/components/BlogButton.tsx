@@ -5,7 +5,7 @@ import React from "react";
 
 export type BlogProps = {
   title: string;
-  id:string;
+  _id:string;
   content: string;
   publishedAt: Date;
   author: {
@@ -17,7 +17,7 @@ export type BlogProps = {
 export default function BlogButton({ Blog }: { Blog: BlogProps }) {
   return (
     <Link
-      href={`/blog/${Blog.id}`}
+      href={`/blog/${Blog._id}`}
       className="flex flex-col justify-center items-start w-[25vw] bg-zinc-50 hover:bg-zinc-200 transition-colors rounded p-4"
     >
       <h3 className="font-bold text-xl">{Blog.title}</h3>

@@ -1,28 +1,35 @@
+"use client";
 import BlogButton, { BlogProps } from "@/components/BlogButton";
 import axios from "axios";
-
-const exampleBlog: BlogProps = {
-  id: "1",
-  title: "Awesome Blog",
-  content: "This is a blog about awesome stuff",
-  publishedAt: new Date(),
-  author: {
-    name: "John Doe",
-    avatar:
-      "https://pbs.twimg.com/profile_images/1671511978303430658/0fcxWFub_400x400.jpg",
-  },
-};
+import { set } from "mongoose";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [blogs, setBlogs] = useState<BlogProps[]>();
+
+  const [postTitle, setPostTitle] = useState<string>("");
+  const [postContent, setPostContent] = useState<string>("");
+
   async function newBlog() {
     const res = await axios.post("/api/blog", {
-      title: "Awesome Blog",
-      content: "This is a blog about awesome stuff",
+      title: postTitle,
+      content: postContent,
       publishedAt: new Date(),
-      author: { name: "John Doe", avatar: "" },
+      author: {
+        name: "Grkn",
+        avatar:
+          "https://pbs.twimg.com/profile_images/1671511978303430658/0fcxWFub_400x400.jpg",
+      },
     });
-    console.log(res.data);
+    if (res.data.success) getBlogs();
   }
+  async function getBlogs() {
+    const res = await axios.get("/api/blog");
+    setBlogs(res.data.data);
+  }
+  useEffect(() => {
+    getBlogs();
+  }, []);
 
   return (
     <div className=" h-screen flex justify-center items-center">
@@ -34,13 +41,22 @@ export default function Home() {
               className="outline-none p-2 rounded-sm w-[25vw]"
               type="text"
               placeholder="Title"
+              onChange={(e) => {
+                setPostTitle(e.target.value);
+              }}
             />
             <textarea
               className="outline-none p-2 rounded-sm w-[25vw] h-[25vh]"
               placeholder="Content"
+              onChange={(e) => {
+                setPostContent(e.target.value);
+              }}
             />
           </div>
-          <button className="bg-black w-[12vw] px-4 py-2 rounded-md text-white flex justify-center items-center gap-x-2 hover:opacity-75">
+          <button
+            onClick={() => newBlog()}
+            className="bg-black w-[12vw] px-4 py-2 rounded-md text-white flex justify-center items-center gap-x-2 hover:opacity-75"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -62,10 +78,9 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center h-[60vh] gap-y-4 ">
           <h1 className="text-4xl font-bold">Blogs</h1>
           <div className="flex flex-col gap-y-4 h-full overflow-y-scroll  p-4">
-            <BlogButton Blog={exampleBlog} />
-            <BlogButton Blog={exampleBlog} />
-            <BlogButton Blog={exampleBlog} />
-            <BlogButton Blog={exampleBlog} />
+            {blogs?.map((blog) => (
+              <BlogButton Blog={blog} key={blog._id} />
+            ))}
           </div>
         </div>
       </div>
