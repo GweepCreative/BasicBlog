@@ -1,11 +1,11 @@
 "use client";
 import BlogButton, { BlogProps } from "@/components/BlogButton";
 import axios from "axios";
-import { set } from "mongoose";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [blogs, setBlogs] = useState<BlogProps[]>();
+
 
   const [postTitle, setPostTitle] = useState<string>("");
   const [postContent, setPostContent] = useState<string>("");
